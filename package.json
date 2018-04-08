@@ -1,0 +1,15 @@
+{
+  "name": "w3study",
+  "version": "1.0.0",
+  "description": "一段无声的自白，\r 一小群人的狂欢。",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitee.com/jn9/w3study.git"
+  },
+  "author": "",
+  "license": "ISC"
+}
