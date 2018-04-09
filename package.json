@@ -11,5 +11,13 @@
     "url": "https://gitee.com/jn9/w3study.git"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "cookies": "^0.7.1",
+    "express": "^4.16.3",
+    "markdown": "^0.5.0",
+    "mongoose": "^5.0.13",
+    "swig": "^1.4.2"
+  }
 }
