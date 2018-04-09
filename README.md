@@ -27,3 +27,16 @@
 - javascript 练习
   - 英文题目 https://github.com/wesbos/JavaScript30
   - 中文解答 https://github.com/soyaine/JavaScript30
+  
+## 更新日志
+
+2018.4.9
+
+* 建立了基本的文档结构
+* 建立了git仓库，并定期push代码到仓库内
+* 使用node和express输出hello world
+* 使用安装并模板引擎swig
+* 使用express的路由功能，根据不同网址返回不同内容
+* 安装并使用mongodb, 并在命令行中开启服务器 .\mongod --dbpath=F:\project\w3study\db --port=8889
+* 安装并使用studio 3T, 连接了数据库，进行对mongodb进行可视化操作
+* 安装并使用Mongoose, 连接了数据库

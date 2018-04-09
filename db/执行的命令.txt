@@ -1,0 +1,1 @@
+.\mongod --dbpath=F:\project\w3study\db --port=8889
