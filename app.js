@@ -6,8 +6,14 @@ var swig = require('swig');
 // 加载数据库模块
 var mongoose  = require('mongoose');
 
+// 加载body-parser 用来处理post提交过来的数据
+var bodyParser = require('body-parser');
+
 //创建app应用  Http.createServer();
 var app = express();
+
+//cookie
+var Cookies =  require("cookies");
 
 //设置静态文件托管 ,当访问public的时候，使用后面的方式处理。把前面的路径指向后面
 //当用户访问的url以/public 开始，直接返回对应的右边的目录下
@@ -23,6 +29,26 @@ app.set('views','./views')
 app.set('view engine', 'html');
 //开发过程中需要取消模板缓存
 swig.setDefaults({cache:false});
+
+
+// bodyparser 设置,自动在request对象上增加一个属性
+app.use(bodyParser.urlencoded({extended: true}))
+
+//设置cookie
+app.use(function(req,res,next){
+  req.cookies =new Cookies(req, res);
+  //解析用户登陆信息
+  req.userInfo ={};
+  if(req.cookies.get('userInfo')){
+    try{
+      req.userInfo = JSON.parse(req.cookies.get('userInfo'));
+    }catch(e){
+
+    }
+  };
+  console.log(req.cookies.get('userInfo'))
+  next();
+})
 
 // 根据不同功能 划分模块
 // 前台模块 - 后台管理模块 - api模块  app.use('/admin',require('./router/admin'))
@@ -56,6 +82,8 @@ console.log("show me the code")
 
 // const kitty = new Cat({ name: 'Zildjian' });
 // kitty.save().then(() => console.log('meow'));
+
+
 mongoose.connect("mongodb://localhost:8889/blog",function(err){
   if(err){
     console.log("连接失败");

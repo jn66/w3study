@@ -3,7 +3,10 @@ var router = express.Router();
 
 //不用写 admin/user
 router.get('/',function(req,res,next){
-    res.send('homepage');
+    console.log(req.userInfo._id+"----------");
+    res.render("main/index",{
+        userInfo:req.userInfo
+    });
 });
 
 module.exports = router;
