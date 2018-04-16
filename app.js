@@ -1,100 +1,99 @@
-﻿//加载express模块
-var express = require('express');
-
-var swig = require('swig');
-
-// 加载数据库模块
-var mongoose  = require('mongoose');
-
-// 加载body-parser 用来处理post提交过来的数据
-var bodyParser = require('body-parser');
-
-//创建app应用  Http.createServer();
-var app = express();
-
-//cookie
-var Cookies =  require("cookies");
-
-//设置静态文件托管 ,当访问public的时候，使用后面的方式处理。把前面的路径指向后面
-//当用户访问的url以/public 开始，直接返回对应的右边的目录下
-app.use('/public',express.static(__dirname + '/public'));
-
-//-----配置应用模板--------
-//定义当前模板用的模板引擎 第一个参数模版引擎的名称模版的后缀，第二个参数表示用于处理模版内容的方法
-
-app.engine("html",swig.renderFile);
-//设置模版文件存放的目录,第一个参数是views，第二个参数是目录
-app.set('views','./views')
-//注册所有使用的模板引擎，第一个参数是view engine, 第二个参数和engine定义的第一个参数是一致的
-app.set('view engine', 'html');
-//开发过程中需要取消模板缓存
-swig.setDefaults({cache:false});
+// 加载依赖包
+const path = require('path');
+const express = require('express');
+const session = require('express-session')
+//const bodyParser = require('body-parser');
+//const session = require('express-session');
+//const MongoStore = require('connect-mongo')(session);
 
 
-// bodyparser 设置,自动在request对象上增加一个属性
-app.use(bodyParser.urlencoded({extended: true}))
 
-//设置cookie
-app.use(function(req,res,next){
-  req.cookies =new Cookies(req, res);
-  //解析用户登陆信息
-  req.userInfo ={};
-  if(req.cookies.get('userInfo')){
-    try{
-      req.userInfo = JSON.parse(req.cookies.get('userInfo'));
-    }catch(e){
 
-    }
-  };
-  console.log(req.cookies.get('userInfo'))
-  next();
+const app = express();
+//我的配置哈哈哈
+
+const config = {
+  port: 8888,
+  session: {
+    secret: 'myblog',
+    key: 'myblog',
+    maxAge: 2592000000
+  },
+  mongodb: 'mongodb://localhost:8889/myblog'
+}
+//设置存放模板的目录
+app.set('views',path.join(__dirname, 'views'));
+//设置模板引擎为ejs
+app.set('view engine', 'ejs');
+
+
+// 托管静态文件，这个目录下面的文件可以直接访问了 app.use(express.static("public"));
+// 如/public/bootstrap.css   输入网址 localhost:1234/bootstrap.css
+// 如果第一个参数是目录的话，就会创造虚拟路径，也就是localhost:1234/public/bootstrap.css 才能访问
+app.use("/public",express.static(path.join(__dirname, "public")));
+
+
+
+
+//加载mongoose操作数据库
+const Mongolass = require('mongolass');
+const Schema = Mongolass.Schema
+//连接数据库
+const mongolass = new Mongolass("mongodb://localhost:8889/myblog");
+//表结构
+const UserSchema = new Schema('UserSchema', {
+  username: { type: 'string', required: true },
+  password: { type: 'string' }
 })
+//定义user这个表/collection  用这个结构
+const User = mongolass.model('User', UserSchema);
+User.index({username:1},{unique:true}).exec();
+//用session
+app.use(session({
+  name:"aaabbbccc",
+  secret:"it is a secret"
+}))
 
-// 根据不同功能 划分模块
-// 前台模块 - 后台管理模块 - api模块  app.use('/admin',require('./router/admin'))
+app.use(require('express-formidable')({}));
 
-app.use('/admin', require('./routers/admin'));
-app.use('/api', require('./routers/api'));
-app.use('/', require('./routers/main'));
-
-//测试一下 模板引擎
-app.get('/test', function(req, res, next){
-  //读取views目录下的指定文件，解析并返回客户端，
-  // 第一个参数，模板文件，相对于views目录。会找到views/index.html
-  // 第二个参数，传递给模板使用的数据
-  res.render("index");
-})
-
-//这段就测试下，实际上用静态文件托管来替代
-app.get('/main.css',function(req,res,next){
-  //默认发送html，现在要发送css格式。不然没法解析成css
-  res.setHeader('content-type','text/css');
-  res.send("body{background:red;}")
-})
-//监听http请求
-console.log("show me the code")
-
-// 如何使用mongoose操作数据库呢
-// const mongoose = require('mongoose');
-// mongoose.connect('mongodb://localhost/test');
-
-// const Cat = mongoose.model('Cat', { name: String });
-
-// const kitty = new Cat({ name: 'Zildjian' });
-// kitty.save().then(() => console.log('meow'));
-
-
-mongoose.connect("mongodb://localhost:8889/blog",function(err){
-  if(err){
-    console.log("连接失败");
-  }else{
-    console.log("连接成功");
-    app.listen(8888);
-  }
+app.get('/',function(req,res,next){
+  res.render('index');
+});
+app.get('/publish',function(req,res,next){
+  res.render('publish');
+});
+app.get('/login',function(req,res,next){
+  res.render('login');
+});
+app.get('/register',function(req,res,next){
+  res.render('register',{username:'lucy'});
 });
 
 
-//用户发送http请求 ->url -> 解析路由 ->找到匹配规则 - 制定绑定函数 - 返回对应内容 - 用户
-//如果访问/public -> 静态 直接读取目录下文件
-//动态 -> 处理业务逻辑 -> 加载模板 解析模板 -> 返回数据
+app.get('/users/:name',function(req,res){
+  res.send(req.params.name);
+})
 
+app.get('/api/register',function(req,res,next){
+  console.log(req.query);
+  res.send("aaa");
+});
+
+app.post('/api/register',function(req,res,next){
+  res.send("aaa");
+  const username =  req.fields.username;
+  const password =  req.fields.password;
+  let userdata ={
+    username : username,
+    password : password
+  }
+  console.log(userdata);
+  User.create(userdata).exec().then(console.log("gogogo")).catch(function(e){
+    console.error(e);
+  });
+  res.send("bbb")
+});
+
+app.listen(3001,function(){
+    console.log("服务器开启^-^开始监听3001端口")
+})
