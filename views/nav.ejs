@@ -8,7 +8,7 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="#">CNKI - PRO</a>
+        <a class="navbar-brand" href="#"><%= blog.title %></a>
       </div>
 
       <!-- Collect the nav links, forms, and other content for toggling -->
@@ -19,14 +19,28 @@
           <li><a href="./register">用户注册页</a></li>
           <li><a href="./login">用户登录页</a></li>
           <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">个人中心 <span class="caret"></span></a>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">个人主页 <span class="caret"></span></a>
             <ul class="dropdown-menu">
-              <li><a href="#">用户信息</a></li>
-              <li role="separator" class="divider"></li>
+              <% if (user) {%>
+              <li><a href="#">个人主页</a></li>
+              <li><a href="#">发布文章</a></li>
               <li><a href="#">登出</a></li>
+              <% } else {%>
+              <li><a href="#">注册</a></li>
+              <li role="separator" class="divider"></li>
+              <li><a href="#">登录</a></li>
+              <% } %>
             </ul>
           </li>
         </ul>
       </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
   </nav>
+<% if (success) {%>
+<div class="alert alert-success" role="alert"><%= success %></div>
+<% }%>
+
+<% if (error) {%>
+<div class="alert alert-info" role="alert"><%= error %></div>
+<% }%>
+

@@ -33,6 +33,8 @@
 npm i -g supervisor
 supervisor --harmony app 执行后 文件更新自动重启服务器 爽歪歪
 
+.\mongod --dbpath=F:\project\w3study\db --port=8889 开启数据库服务器
+
 ## 更新日志
 
 2018.4.9
@@ -87,3 +89,27 @@ supervisor --harmony app 执行后 文件更新自动重启服务器 爽歪歪
 
 * 使用原生的form表达提交post请求到后端。后端接收到数据。
 * 使用Ajax提交GET请求和POST请求到后端, 后端接收到数据。
+* 后端接收到数据，写进数据库。
+  * 问题1，建立数据库结构的时候，如果规定格式是纯数字，就不能写进字符串。这个错误没发现，耽误了2小时。
+  * 问题2，E11000 duplicate key error collection，主键重复，这块耽误了2小时
+    * use “你的数据库名” ,切换到你的项目的数据库下
+    * 输入命令 db.users.getIndexes()  输出结果是包含多个对象的数组
+    * 输入命令 db.users.dropIndex({"username":1})
+    * 继续输入命令 db.users.dropIndex({你项目的key:value})  只保留一个 _id作为主键
+    * 已经ok了。你也可以在输入 db.users.getIndexes() 查看是否只有一个_id
+  * 问题3 插入数据之后必须catch()回调，这块不知道，又耽误了2小时！
+
+
+2018.4.17
+
+* 分离了路由，包括登录、登出、注册、评论的请求
+* 分离了中间件，主要用来判断用户的session是否登录，给予不同的提示。
+
+2018.4.18
+
+* 完善了注册的静态页
+* 写了注册user的数据库基本结构
+* 创建了create函数，可以在数据库中创建用户
+* 写了signup的路由，对用户名合法性进行了判断，并将注册成功的数据存到数据库
+* 开发了头像上传功能，并能存到数据库
+* 增加了2个bug
