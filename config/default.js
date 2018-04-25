@@ -2,7 +2,7 @@
 //其他地方导入之后，const config = import(./config/default)
 // config.port 获取到端口号码
 module.exports = {
-  port: 8889,
+  port: 8888,
   info: "welcome to xatu",
   session: {
     secret: 'myblog',

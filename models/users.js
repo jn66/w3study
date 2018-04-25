@@ -1,8 +1,15 @@
-const User = require('../lib/mongo').User
+const mongoose = require('mongoose');
 
-module.exports = {
-  //注册一个用户
-  create : function create (user){
-    return User.create(user).exec();
+const userSchema = new mongoose.Schema({
+  email:{type:String, unique:true},
+  password:String,
+  profile:{
+    name:String,
+    picture:String,
+    website:String
   }
-}
+} , {timestamps: true });
+
+const User = mongoose.model('User', userSchema);
+
+module.exports = User;
