@@ -47,14 +47,14 @@ const app = express();
 /**
  * 连接数据库
  */
-mongoose.Promise = global.Promise; //不知道啥意思，别人这么写
-mongoose.connect(config.mongodb);  //从配置文件中获取mongodb的连接地址
-//如果连接出错，给出错误提示
-mongoose.connection.on('error', (err) => {
-  console.error(err);
-  console.log('%s MongoDB connection error. Please make sure MongoDB is running.', chalk.red('✗'));
-  process.exit();
-});
+// mongoose.Promise = global.Promise; //不知道啥意思，别人这么写
+// mongoose.connect(config.mongodb);  //从配置文件中获取mongodb的连接地址
+// //如果连接出错，给出错误提示
+// mongoose.connection.on('error', (err) => {
+//   console.error(err);
+//   console.log('%s MongoDB connection error. Please make sure MongoDB is running.', chalk.red('✗'));
+//   process.exit();
+// });
 
 /**
  * 基本express的配置
@@ -71,10 +71,10 @@ app.use(session({  //配置session
   saveUninitialized: true,
   secret: config.session.secret,
   cookie: { maxAge: config.session.maxAge }, // two weeks in milliseconds
-  store: new MongoStore({
-    url: config.mongodb,
-    autoReconnect: true,
-  })
+  // store: new MongoStore({
+  //   url: config.mongodb,
+  //   autoReconnect: true,
+  // })
 }));
 app.use(flash());  //加载提示信息中间件
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 })); //配置静态文件目录 可以直接加载出来里面的文件
